@@ -24,6 +24,7 @@ class _HelloWorldState extends State<HelloWorld> {
           title: const Text('Hello World'),
         ),
         body: ArCoreView(
+          enableTapRecognizer: true,
           onArCoreViewCreated: _onArCoreViewCreated,
         ),
       ),
@@ -32,10 +33,30 @@ class _HelloWorldState extends State<HelloWorld> {
 
   void _onArCoreViewCreated(ArCoreController controller) {
     arCoreController = controller;
+    arCoreController.onPlaneTap = _onPlaneTap;
+    arCoreController.onNodeTap = handleTap;
 
-    _addSphere(arCoreController);
-    _addCylindre(arCoreController);
-    _addCube(arCoreController);
+    // _addSphere(arCoreController);
+    // _addCylindre(arCoreController);
+    // _addCube(arCoreController);
+  }
+
+  _onPlaneTap(List<ArCoreHitTestResult> hits) => _onHitDetected(hits.first);
+
+  void handleTap(String name) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) =>
+          AlertDialog(content: Text('onNodeTap on $name')),
+    );
+  }
+
+  void _onHitDetected(ArCoreHitTestResult plane) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) =>
+          const AlertDialog(content: Text('On Plane Tap done')),
+    );
   }
 
   void _addSphere(ArCoreController controller) {
